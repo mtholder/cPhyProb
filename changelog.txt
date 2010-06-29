@@ -1,0 +1,17 @@
+`cPhyProb` change log
+=====================
+
+* version 0.01 - stil in progress
+
+
+
+See home_.
+
+.. _home: ./index.html
+
+.. _pylint: http://www.logilab.org
+.. _cheesecake: http://pycheesecake.org/
+
+
+
+

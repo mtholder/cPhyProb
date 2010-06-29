@@ -1,0 +1,16 @@
+`cPhyProb` Todo list
+====================
+
+* So, so much to do.
+* make RevDiscModel use r_upper instead of r_mat
+* Need to write more tests (and use coverage.py_).
+* Run pylint_ to accumulate a list of items flagged as TODO:
+
+
+
+
+See home_.
+
+.. _home: ./index.html
+.. _pylint: http://www.logilab.org
+.. _coverage.py: http://nedbatchelder.com/code/modules/coverage.html

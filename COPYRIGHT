@@ -1,0 +1,48 @@
+################################################################################
+# cPhyProb is a package implementing some probability calculations used in
+#   calculating likelihoods on phylogenies. 
+# 
+# With the exception of some code written by others (see below). The code is
+#   Copyright (C) 2007
+#   Mark Holder, 
+#   Department of Ecology and Evolutionary Biology,
+#   The University of Kansas.
+#   mtholder@gmail.com
+# 
+#
+# Code by others
+# ==============
+# Code by others (all in the C-code in the cPhyProb/ccore directory)
+# C-Extension were written by adapting Alex Martelli's example code in the 
+#   Python Cookbook Section 17.1
+# 
+# Among-site rate variation code based on code from the PAML package:
+# Yang, Z.  2007.  PAML 4: a program package for phylogenetic analysis by 
+#   maximum likelihood.  Molecular Biology and Evolution 24: 1586-1591 
+#   (http://abacus.gene.ucl.ac.uk/software/paml.html)
+#
+# Eigensystem code from MrBayes 3.2 Copyright 2002-2007
+#   John P. Huelsenbeck
+#   Fredrik Ronquist
+#   Paul van der Mark
+# updated from the CVS Repository: mrbayes from the root:
+# :pserver:anonymous@mrbayes.cvs.sourceforge.net:/cvsroot/mrbayes
+# on 2007-Oct-05
+# Some of that code was written (or translated from FORTRAN) by:
+#   David Swofford 
+# 
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU  General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  General Public License for more details.
+# 
+# You should have received a copy of the GNU  General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+################################################################################

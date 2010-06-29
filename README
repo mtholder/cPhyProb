@@ -1,0 +1,67 @@
+`cPhyProb` Overview
+===================
+
+cPhyProb is a package implementing some probability calculations used in 
+calculating likelihoods on phylogenies. Computationally intensive steps are 
+programmed as C-extensions to python.  The package as expected to be used within
+the context of software that has data structures for trees (such as the arbol_
+package).
+
+This is a work in progress and many of the functions and classes are written for
+teaching purposes rather than speed.  
+
+--------------------------------------------------------------------------------
+
+Obtaining and Installing
+========================
+
+The home page is at cPhyProb_
+  
+--------------------------------------------------------------------------------
+
+Road Map
+========
+
+* implement basic models and routines needed to calculate the likelihood of a 
+  tree.
+
+--------------------------------------------------------------------------------
+
+Contributing
+============
+Currently, all of the code has been written by Mark Holder, but comments and 
+contributions are welcome.
+Email Mark_ if you would like write-access to the svn repository.
+The code is available under either the GPL_ or a BSD_ license if you would 
+like to reuse it.
+
+
+--------------------------------------------------------------------------------
+
+See also
+=========
+
+* FAQ_
+* News_
+* ChangeLog_
+* Todo_
+* Authors_
+* Maintainers_
+* Thanks_
+
+.. _FAQ: ./FAQ.html
+.. _News: ./News.html
+.. _ChangeLog: ./ChangeLog.html
+.. _Todo: ./Todo.html
+.. _Authors: ./Authors.html
+.. _Maintainers: ./Maintainers.html
+.. _Thanks: ./Thanks.html
+.. _GPL: http://www.opensource.org/licenses/gpl-license.php
+.. _BSD: http://www.opensource.org/licenses/bsd-license.php
+.. _GPL.txt: ./GPL.txt
+.. _Python: http://www.python.org
+.. _arbol: http://people.ku.edu/~mtholder/arbol
+.. _cPhyProb: http://people.ku.edu/~mtholder/cPhyProb
+.. _Cheese Shop: http://cheeseshop.python.org/pypi
+.. _setuptools: http://peak.telecommunity.com/DevCenter/setuptools
+.. _Mark: mtholder@gmail.com

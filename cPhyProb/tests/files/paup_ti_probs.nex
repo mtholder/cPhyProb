@@ -1,0 +1,33 @@
+#NEXUS
+begin data;
+	dimensions ntax=4 nchar = 16;
+	format datatype=dna;
+	matrix
+A1	AAAACCCCGGGGTTTT
+A2	AAAACCCCGGGGTTTT
+B1	ACGTACGTACGTACGT
+B2	ACGTACGTACGTACGT
+	;
+end;
+
+begin paup;
+	set storebr;
+end;
+
+begin trees;
+	tree one = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):0.01);
+	tree two = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):0.02);
+	tree four = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):0.04);
+	tree eight = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):0.08);
+	tree sixteen = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):0.16);
+	tree thirty_two = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):0.32);
+	tree sixty_four = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):0.64);
+	tree one_twenty_eight = [&U] (A1:0.0,A2:0.0,(B1:0.0,B2:0.0):1.28);
+end;
+
+begin paup;
+	[lscore 1 / nst=2 trat = 5.0 basefreq = equal rates=equal pinvar = 0.0 userbrlens sitelike;]
+	
+	lscore 1 / nst=6 rmat=(1.25  3.75  1.5 2.5 5.1249) basefreq = (0.23 0.31 0.21) rates=equal pinvar = 0.0 userbrlens sitelike;
+end;
+

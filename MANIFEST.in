@@ -1,0 +1,18 @@
+include Authors.txt
+include COPYRIGHT
+include FAQ.txt
+include INSTALL
+include GPL.txt
+include LICENSE
+include MAINTAINERS
+include News.txt
+include README
+include Thanks.txt
+include Todo.txt
+include changelog.txt
+include make_docs.sh
+include pycheckrc
+include pylintrc
+include setup.cfg
+include doc/*.html doc/cPhyProb.css
+include examples

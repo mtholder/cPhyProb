@@ -1,0 +1,22 @@
+#NEXUS
+begin data;
+	dimensions ntax=4 nchar=4;
+	format datatype = dna;
+	matrix
+t1 ACGT
+t2 ACGC
+t3 ACGT
+t4 NNNN
+;
+end;
+
+begin paup;
+	set storebrlens;
+end;
+begin trees;
+	tree one = [&U] (t1:0.1,t2:0.07,t3:0.05,t4:1.0);
+end;
+begin paup;
+	lsc / userbr nst  =1 basefreq=eq rates=eq pinv=0;
+	lsc / userbr nst  = 2 trat=3.2 basefreq=eq rates=eq pinv=0;
+end;

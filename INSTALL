@@ -1,0 +1,22 @@
+`cPhyProb` Installation
+=======================
+
+`cPhyProb` is a python package with C extensions. To build from source, you must
+have a C compiler (see python setuptools and distutils packages for details on
+how to configure your C compiler if build fails).  After changing directory to 
+the top of the package you should be able to install by simply invoking:
+
+::
+  python setup.py build
+  python setup.py install
+
+To see the installation options use:
+
+::
+  python setup.py install --help
+
+
+
+See the Readme_.
+
+.. _Readme: ./Readme.html

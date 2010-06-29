@@ -1,0 +1,15 @@
+`cPhyProb` News
+===============
+
+`cPhyProb` is just getting up and running -- no real news yet.
+
+See the ChangeLog_ for a list of changes by version.
+
+
+
+
+See home_.
+
+.. _home: ./index.html
+.. _ChangeLog: ./ChangeLog.html
+

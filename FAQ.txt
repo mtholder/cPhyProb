@@ -1,0 +1,22 @@
+`cPhyProb` Frequently asked questions
+=====================================
+
+1. What is cPhyProb? 
+    cPhyProb is a package implementing some probability calculations used in
+    calculating likelihoods on phylogenies. Computationally intensive steps
+    are programmed as C-extensions to python.
+
+2. Where is the homepage for this package?
+    http://people.ku.edu/~mtholder/cPhyProb/
+
+3. Where is the licensing information? 
+    See LICENSE for a brief overview or `GPL.txt`_ for a more detailed description
+    of the GNU  General Public License.
+
+
+
+
+See home_.
+
+.. _home: ./index.html
+.. _GPL.txt: ./GPL.txt
