@@ -15,8 +15,24 @@ To see the installation options use:
 ::
   python setup.py install --help
 
+When using the beagle-lib option, you will need to set BEAGLE_LIB_DIR to the
+"prefix" directory where you have installed BEAGLE_LIB_DIR (if that dir was not
+/usr/local).
+
+Currently Beagle-lib will not compile for a "fat" binary on Mac (ppc and i386
+architecture), so you may need to edit your Makefile in the python config 
+directory -- On my machine this file was in 
+	/Library/Frameworks/Python.framework/Versions/Current/lib/python2.6/config/Makefile
+because my python exeutable is in:
+	/Library/Frameworks/Python.framework/Versions/Current/bin/python
+The change that you need to make to the Makefile is the removal of the compile
+option "-arch ppc" wherever it occurs in the file.  Save a backup of the original
+python Makefile.
+
 
 
 See the Readme_.
 
 .. _Readme: ./Readme.html
+
+

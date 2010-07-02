@@ -1,33 +1,34 @@
 #! /usr/bin/env python
 # Copyright (c) 2005-7 by Mark T. Holder,  University of Kansas
 # (see bottom of file)
-'''
+
 "unit tests datatyp internals"
 import unittest
 from cPhyProb.tests.util import *
 # pylint: disable-msg=C0111,W0401,W0611,W0212
-from cPhyProb.phy_calc import get_tree_decorators, calc_cla, calc_lnL
-from cPhyProb.discrete_model import RevDiscreteModel, _r_upper_to_r_mat, \
-    _r_mat_to_r_upper, JukesCantor
-from cPhyProb.prob_mat import ProbMatrixArray
-from cPhyProb.discrete_char_type import DNAType
+from cPhyProb.discrete_char_type import DiscreteCharType, DNAType
+class DiscreteCharTypeTest(unittest.TestCase):
+    def test_DNA(self):
+        d = DNAType()
 
-class LikelihoodTest(unittest.TestCase):
-    def test_jc_three_tax(self):
-        mod = JukesCantor()
-        seq_data = ["ACGT", "ACGC", "ACGT"]
-        leaf_data, clas, full_la = get_tree_decorators(seq_data, mod)
-        leaf0, leaf1, leaf2 = leaf_data
-        internal_d = clas[0]
-        leaf0.set_brlen(0.1)
-        leaf1.set_brlen(0.07)
-        leaf2.set_brlen(0.05)
-        lnL = calc_lnL(full_la, internal_d, leaves=leaf_data, internals=(), beg_subset=0, end_subset=1, beg_cat=0, end_cat=1)
-        self.assertTrue(abs(10.12296 + lnL) < 1e-05)
-        
+    def test_bad(self):
+        self.assertRaises(ValueError, DiscreteCharType, "")
+        self.assertRaises(ValueError, DiscreteCharType, "ACA")
+        self.assertRaises(ValueError, DiscreteCharType, "ACGT", (("A","A"),))
+        self.assertRaises(ValueError, DiscreteCharType, "ACGT", (("W","AT"),("W","AT")))
+        self.assertRaises(ValueError, DiscreteCharType, "ACGT", (("W","AT"),("Y","CK")))
+        self.assertRaises(ValueError, DiscreteCharType, "ACGT", (("W","AT"),("Y","CT")), missing="W")
+        self.assertRaises(ValueError, DiscreteCharType, "ACGT", (("W","AT"),("Y","CT")), missing="?", aliases=[("A","A")])
+        self.assertRaises(ValueError, DiscreteCharType, "ACGT", (("W","AT"),("Y","CT")), missing="?", aliases=[("a","a")], ignore_case=False)
+
+    def test_dna(self):
+        d = DNAType()
+        inds = d.to_indices("ACNGT-WAYKCSXBDVMRH")
+        self.assertEquals(inds, [0, 1, 4, 2, 3, 4, 8, 0, 6, 10, 1, 9, 4, 14, 13, 11, 7, 5, 12])
+
 def additional_tests():
     "returns all tests in this file as suite"
-    return unittest.TestLoader().loadTestsFromTestCase(LikelihoodTest)
+    return unittest.TestLoader().loadTestsFromTestCase(DiscreteCharTypeTest)
 
 # pylint: disable-msg=C0103
 def getTestSuite():
@@ -38,7 +39,7 @@ def getTestSuite():
 
 if __name__ == "__main__":
     unittest.main()
-'''
+
 ################################################################################
 # cPhyProb is a package implementing some probability calculations used in
 #   calculating likelihoods on phylogenies. 

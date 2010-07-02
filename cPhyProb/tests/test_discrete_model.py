@@ -1,7 +1,43 @@
 #! /usr/bin/env python
 # Copyright (c) 2005-7 by Mark T. Holder,  University of Kansas
 # (see bottom of file)
+"unit tests of RevDiscreteModel"
+import unittest
+from cPhyProb.tests.util import *
+# pylint: disable-msg=C0111,W0401,W0611,W0212
 
+from cPhyProb.discrete_char_type import DNAType
+from cPhyProb.discrete_model import RevDiscreteModel, Kimura2Parameter
+class ModelTest(unittest.TestCase):
+    def xtest_rev_init(self):
+        b = DNAType()
+        a = RevDiscreteModel(r_upper=[[1.0, 1.0, 1.0], [1.0, 1.0], [1.0],], char_type=b)
+        print id(a.char_type)
+    def xtest_two(self):
+        d = DNAType()
+        c = RevDiscreteModel(r_upper=[[1.0, 1.0, 1.0], [1.0, 1.0], [1.0],], char_type=d)
+        print id(c.char_type)
+    def test_init(self):
+        m = Kimura2Parameter(2.3)
+        print id(m.char_type)
+        self.assertEqual(bool(m), True)
+
+
+def additional_tests():
+    "returns all tests in this file as suite"
+    return unittest.TestLoader().loadTestsFromTestCase(ModelTest)
+
+# pylint: disable-msg=C0103
+def getTestSuite():
+    """Alias to the additional_tests().  This is unittest-style.
+    `additional_tests` is used by setuptools.
+    """
+    return additional_tests()
+
+if __name__ == "__main__":
+    unittest.main()
+
+'''
 "unit tests of RevDiscreteModel"
 import unittest
 from cPhyProb.tests.util import *
@@ -54,42 +90,29 @@ class TRDSModelTest(unittest.TestCase):
                                       [.25, .5, .25, -1.0]])
         a.state_freqs = [0.2, 0.3, 0.15, 0.35]
         assert_list_eq(self, a.state_freqs, [0.2, 0.3, 0.15, 0.35])
-        exp = [[-0.9547738, 0.301507, 0.3015075, 0.351758], 
-               [0.20100502, -1.05527638, 0.15075376, 0.7035175], 
-               [0.40201005, 0.301507537, -1.05527638, 0.35175879], 
+        exp = [[-0.9547738, 0.301507, 0.3015075, 0.351758],
+               [0.20100502, -1.05527638, 0.15075376, 0.7035175],
+               [0.40201005, 0.301507537, -1.05527638, 0.35175879],
                [0.2010050, 0.603015075, 0.150753768, -0.954773869]]
         assert_mat_eq(self, a.q_mat, exp)
 
-def additional_tests():
-    "returns all tests in this file as suite"
-    return unittest.TestLoader().loadTestsFromTestCase(TRDSModelTest)
-
-# pylint: disable-msg=C0103
-def getTestSuite():
-    """Alias to the additional_tests().  This is unittest-style.
-    `additional_tests` is used by setuptools.
-    """
-    return additional_tests()
-
-if __name__ == "__main__":
-    unittest.main()
-
+'''
 ################################################################################
 # cPhyProb is a package implementing some probability calculations used in
-#   calculating likelihoods on phylogenies. 
-# 
+#   calculating likelihoods on phylogenies.
+#
 # Copyright (C) 2005-2007  Mark Holder mtholder@gmail.com
-# 
+#
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU  General Public
 # License as published by the Free Software Foundation; either
 # version 2.1 of the License, or (at your option) any later version.
-# 
+#
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #  General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU  General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA

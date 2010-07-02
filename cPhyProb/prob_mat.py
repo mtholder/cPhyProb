@@ -6,13 +6,8 @@
 import copy
 from itertools import izip
 
-from cPhyProb.ccore.dsct_model import cdsctm_ctor, cdsctm_get_dimen, \
-    cdsctm_set_q_mat, casrvo_ctor, casrvo_set_shape,\
-    casrvo_get_rates, casrvo_get_shape, cpmat_array_ctor,\
-    cpmat_array_get_mat_list, calc_pmat_array, calc_pmat
+from cPhyProb.ccore.dsct_model import cpmat_array_ctor, calc_pmat_array, cpmat_array_get_mat_list
 
-_MIN_GAMMA_SHAPE = 1.0e-07
-_LOW_RATE_MIN_GAMMA_SHAPE = 1.0e-200
 
 def slice_to_iterable(s):
     """Returns an xrange object that will iterate through the indices specified

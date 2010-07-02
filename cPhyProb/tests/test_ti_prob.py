@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # Copyright (c) 2005-7 by Mark T. Holder,  University of Kansas
 # (see bottom of file)
-
+'''
 "unit tests of among-site rate heterogeneity code"
 import unittest
 from cPhyProb.tests.util import *
@@ -66,7 +66,7 @@ def getTestSuite():
 
 if __name__ == "__main__":
     unittest.main()
-
+'''
 ################################################################################
 # cPhyProb is a package implementing some probability calculations used in
 #   calculating likelihoods on phylogenies. 

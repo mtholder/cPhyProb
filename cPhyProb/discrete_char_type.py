@@ -6,29 +6,29 @@ structures for characters at the leaves of a tree and the conditional
 likelihood array for a tree.
 """
 
-from cPhyProb.ccore.dsct_model import cleaf_data_ctor, cla_ctor, full_la_ctor, \
-    csslookup_ctor
+from cPhyProb.ccore.dsct_model import cstate_set_lookup_ctor
 
 _DNA_TYPE = None
-
+def CreateDNAType():
+    ambig_codes = (("R", "AG"),
+                   ("Y","CT"),
+                   ("M","AC"),
+                   ("W","AT"),
+                   ("S","CG"),
+                   ("K","GT"),
+                   ("V","ACG"),
+                   ("H","ACT"),
+                   ("D","AGT"),
+                   ("B","CGT"),)
+    aliases = (("-", "N"),("X", "N"), ("?", "N"))
+    return DiscreteCharType("ACGT", 
+                                 missing="N", 
+                                 ambig_codes=ambig_codes,
+                                 aliases=aliases)
 def DNAType():
     global _DNA_TYPE
     if _DNA_TYPE is None:
-        ambig_codes = (("R", "AG"),
-                       ("Y","CT"),
-                       ("M","AC"),
-                       ("W","AT"),
-                       ("S","CG"),
-                       ("K","GT"),
-                       ("V","ACG"),
-                       ("H","ACT"),
-                       ("D","AGT"),
-                       ("B","CGT"),)
-        aliases = (("-", "N"),("X", "N"), ("?", "N"))
-        _DNA_TYPE = DiscreteCharType("ACGT", 
-                                     missing="N", 
-                                     ambig_codes=ambig_codes,
-                                     aliases=aliases)
+        _DNA_TYPE = CreateDNAType()
     return _DNA_TYPE
 
 class DiscreteCharType(object):
@@ -45,10 +45,10 @@ class DiscreteCharType(object):
             (alias, real-name).
         If `missing` is specified, it is treated as the first ambig_code
         """
-        self._n_states = len(states)
+        self._num_states = len(states)
         self._states = tuple(states)
         self._ignore_case = ignore_case
-        if self._n_states < 2:
+        if self._num_states < 2:
             raise ValueError("The number of states must be greater than 1")
         labels = []
         expansions = []
@@ -118,7 +118,7 @@ class DiscreteCharType(object):
         expansions = []
         for i in self._state_code_lookup:
             expansions.append(list(i))
-        self._csslookup = csslookup_ctor(self._n_states, expansions)
+        self._cstate_set_lookup = cstate_set_lookup_ctor(self._num_states, expansions)
 
     def to_indices(self, seq):
         "Converts a sequence of character symbols to the corresponding indices."
@@ -128,9 +128,9 @@ class DiscreteCharType(object):
             l.append(sti[s])
         return l
 
-    def get_n_states(self):
-        return self._n_states
-    n_states = property(get_n_states)
+    def get_num_states(self):
+        return self._num_states
+    num_states = property(get_num_states)
 
     def get_states(self):
         return self._states
@@ -152,9 +152,9 @@ class DiscreteCharType(object):
         return self._state_code_lookup
     state_code_lookup = property(get_state_code_lookup)
 
-    def get_csslookup(self):
-        return  self._csslookup
-    csslookup = property(get_csslookup)
+    def get_cstate_set_lookup(self):
+        return  self._cstate_set_lookup
+    cstate_set_lookup = property(get_cstate_set_lookup)
 
 ################################################################################
 # cPhyProb is a package implementing some probability calculations used in

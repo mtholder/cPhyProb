@@ -7,11 +7,11 @@
 __all__ = [
     "util",
     "test_asrv",
-    "test_discrete_model",
-    "test_likelihood",
-    "test_sslookup",
-    "test_ti_prob",
-    "test_tree_decorators",
+    "test_discrete_char_type",
+    #"test_discrete_model",
+    #"test_likelihood",
+    #"test_ti_prob",
+    #"test_tree_decorators",
     ]
 
 import unittest
