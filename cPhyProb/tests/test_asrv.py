@@ -4,7 +4,7 @@
 
 "unit tests of among-site rate heterogeneity code"
 import unittest
-from cPhyProb.tests.util import *
+import cPhyProb
 # pylint: disable-msg=C0111,W0401,W0611,W0212
 from cPhyProb.asrv import RateHetManager, RateHetType, GammaRateHetManager
 

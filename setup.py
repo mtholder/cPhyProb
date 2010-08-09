@@ -31,6 +31,9 @@ if "--debug" in args:
 else:
     kDebugPrint = "0"
     extra_compile_args = []
+if 'CFLAGS' in os.environ:
+    extra_compile_args.extend(os.environ['CFLAGS'].split())
+
 if "--no-inline" in args:
     no_inline_val = 1
     args.remove("--no-inline")
