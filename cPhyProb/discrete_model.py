@@ -32,17 +32,23 @@ if PurePythonImpl:
 
 class Parameter(object):
     def __init__(self, value):
-        self._value = value
+        self._value = self.native_type()(value)
         self.listener_list = []
+    def native_type(self):
+        return lambda x : x
     def add_listener(self, listener):
         self.listener_list.append(listener)
     def get_value(self):
         return self._value
     def set_value(self, v):
+        return self._value_setter(v)
+    def _value_setter(self, v):
         raise AttributeError("can't set attribute")
     value = property(get_value, set_value)
 
 class FloatParameter(Parameter):
+    def native_type(self):
+        return float
     def __float__(self):
         return self.value
     def __add__(self, other):
@@ -53,6 +59,10 @@ class FloatParameter(Parameter):
         return float(self) * other
     def __div__(self, other):
         return float(self) / other
+    def __repr__(self):
+        return 'FloatParameter(%s)' % repr(self.value)
+    def _value_setter(self, v):
+        self._value = float(v)
 
 class MutableFloatParameter(FloatParameter):
     def set_value(self, v):
@@ -235,6 +245,7 @@ class RevDiscreteModel(object):
             internal_row = self._r_mat[row_n]
             for col_n, cell in enumerate(row):
                 internal_cell = internal_row[col_n]
+                print "repr(internal_cell) =", repr(internal_cell)
                 if float(cell) != internal_cell.value:
                     internal_cell.value = cell
         self._recalc_q_mat()

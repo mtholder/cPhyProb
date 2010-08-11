@@ -7,13 +7,13 @@ from cPhyProb.tests.util import *
 # pylint: disable-msg=C0111,W0401,W0611,W0212
 
 from cPhyProb.discrete_char_type import DNAType
-from cPhyProb.discrete_model import RevDiscreteModel, Kimura2Parameter
+from cPhyProb.discrete_model import RevDiscreteModel, Kimura2Parameter, _r_mat_to_r_upper, _r_upper_to_r_mat
 class ModelTest(unittest.TestCase):
-    def xtest_rev_init(self):
+    def test_rev_init(self):
         b = DNAType()
         a = RevDiscreteModel(r_upper=[[1.0, 1.0, 1.0], [1.0, 1.0], [1.0],], char_type=b)
         print id(a.char_type)
-    def xtest_two(self):
+    def test_two(self):
         d = DNAType()
         c = RevDiscreteModel(r_upper=[[1.0, 1.0, 1.0], [1.0, 1.0], [1.0],], char_type=d)
         print id(c.char_type)
@@ -21,38 +21,12 @@ class ModelTest(unittest.TestCase):
         m = Kimura2Parameter(2.3)
         print id(m.char_type)
         self.assertEqual(bool(m), True)
-
-
-def additional_tests():
-    "returns all tests in this file as suite"
-    return unittest.TestLoader().loadTestsFromTestCase(ModelTest)
-
-# pylint: disable-msg=C0103
-def getTestSuite():
-    """Alias to the additional_tests().  This is unittest-style.
-    `additional_tests` is used by setuptools.
-    """
-    return additional_tests()
-
-if __name__ == "__main__":
-    unittest.main()
-
-'''
-"unit tests of RevDiscreteModel"
-import unittest
-from cPhyProb.tests.util import *
-# pylint: disable-msg=C0111,W0401,W0611,W0212
-from cPhyProb.discrete_model import RevDiscreteModel, _r_upper_to_r_mat, \
-    _r_mat_to_r_upper
-
-class TRDSModelTest(unittest.TestCase):
     def test_bad(self):
         self.assertRaises(ValueError, RevDiscreteModel, [])
         self.assertRaises(ValueError, RevDiscreteModel, [[0,1],[.5,0]])
     def test_init(self):
-        a = RevDiscreteModel([["ignored", 2.],[2.,""]])
+        a = RevDiscreteModel([["0", 2.],[2.,"0"]])
         assert_mat_eq(self, a.q_mat, [[-1.0, 1.0],[1.0,-1.0]])
-
     def test_r_upper_to_r_mat(self):
         cases = [([[1.0]],
                   [[0.0, 1.0],
@@ -96,7 +70,24 @@ class TRDSModelTest(unittest.TestCase):
                [0.2010050, 0.603015075, 0.150753768, -0.954773869]]
         assert_mat_eq(self, a.q_mat, exp)
 
-'''
+
+
+def additional_tests():
+    "returns all tests in this file as suite"
+    return unittest.TestLoader().loadTestsFromTestCase(ModelTest)
+
+# pylint: disable-msg=C0103
+def getTestSuite():
+    """Alias to the additional_tests().  This is unittest-style.
+    `additional_tests` is used by setuptools.
+    """
+    return additional_tests()
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+
 ################################################################################
 # cPhyProb is a package implementing some probability calculations used in
 #   calculating likelihoods on phylogenies.
