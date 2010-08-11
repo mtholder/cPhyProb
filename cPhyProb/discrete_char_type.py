@@ -9,7 +9,10 @@ likelihood array for a tree.
 from cPhyProb.ccore.dsct_model import cstate_set_lookup_ctor
 
 _DNA_TYPE = None
-def CreateDNAType():
+_AA_TYPE = None
+_AA_NO_STOP_TYPE = None
+
+def _create_DNA_type():
     ambig_codes = (("R", "AG"),
                    ("Y","CT"),
                    ("M","AC"),
@@ -25,10 +28,38 @@ def CreateDNAType():
                                  missing="N", 
                                  ambig_codes=ambig_codes,
                                  aliases=aliases)
+def _create_AA_type():
+    ambig_codes = (("B", "DN"),
+                   ("Z","EQ"), )
+    aliases = (("-", "X"), ("?", "X"))
+    return DiscreteCharType("ACDEFGHIKLMNPQRSTVWY*", 
+                                 missing="X", 
+                                 ambig_codes=ambig_codes,
+                                 aliases=aliases)
+def _create_AA_no_stop_type():
+    ambig_codes = (("B", "DN"),
+                   ("Z","EQ"), )
+    aliases = (("-", "X"), ("?", "X"))
+    return DiscreteCharType("ACDEFGHIKLMNPQRSTVWY", 
+                                 missing="X", 
+                                 ambig_codes=ambig_codes,
+                                 aliases=aliases)
+def AANoStopType():
+    global _AA_NO_STOP_TYPE
+    if _AA_NO_STOP_TYPE is None:
+        _AA_NO_STOP_TYPE = _create_AA_no_stop_type()
+    return _AA_NO_STOP_TYPE
+
+def AAType():
+    global _AA_TYPE
+    if _AA_TYPE is None:
+        _AA_TYPE = _create_AA_type()
+    return _AA_TYPE
+
 def DNAType():
     global _DNA_TYPE
     if _DNA_TYPE is None:
-        _DNA_TYPE = CreateDNAType()
+        _DNA_TYPE = _create_DNA_type()
     return _DNA_TYPE
 
 class DiscreteCharType(object):
