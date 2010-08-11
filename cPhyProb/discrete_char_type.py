@@ -32,6 +32,34 @@ def DNAType():
     return _DNA_TYPE
 
 class DiscreteCharType(object):
+    '''Represents a mapping between a datatype expressed in terms of strings
+    and a set of character state indices used internally for likelihood calculations.
+    
+    Indices [0, nstates) represent the fundamental states. Index nstates is 
+    used to indicate complete ambiguity (or missing data).
+    
+    attributes:
+       - `num_states` the number of "fundamental" states
+       - `states` a tuple of the labels for the states
+       - `all_symbols` is a tuple of all recognize symbols (will not contain both
+            cases even if the object ignores case).
+      
+       - `ignore_case` a bool which is True if case does not matter for state 
+            labels.
+       - `symbol_to_ind` is a dict mapping a label to the index that the symbol
+            represents (note that this does not map ambiguity strings such as 
+            {AC} to an index).
+       - `state_code_lookup` is maps a state index to a list of the fundamental
+            states that are represented by the state.
+       - `cstate_set_lookup` is an opaque pointer to C cstate_set_lookup object
+       - `partial_ambiguity_indices` is a list of indices that map to multiple (but 
+            not all of the states)
+    methods:
+       - `to_indices` is the primary translation function.
+       - `has_partial_ambiguity` checks a list of indices for any element of
+            partial_ambiguity_indices and returns True if any are found.
+    '''
+
     def __init__(self, states, ambig_codes=(), aliases=None, ignore_case=True, missing=None):
         """Creates an immutable DiscreteCharType object from the list of
         `states`.
@@ -74,6 +102,7 @@ class DiscreteCharType(object):
             ac.extend(ambig_codes)
         else:
             ac = ambig_codes
+        self._partial_ambig_indices = []
         for key, val in ac:
             if ignore_case:
                 key = key.upper()
@@ -99,6 +128,8 @@ class DiscreteCharType(object):
             else:
                 symbols_to_state_sets[key] = texp
                 symbol_to_ind[key] = len(labels)
+                if len(texp) > 1 and len(texp) < self.num_states:
+                    self._partial_ambig_indices.append(len(labels))
                 labels.append(key)
                 expansions.append(texp)
         for key, val in alias_list:
@@ -119,6 +150,7 @@ class DiscreteCharType(object):
         for i in self._state_code_lookup:
             expansions.append(list(i))
         self._cstate_set_lookup = cstate_set_lookup_ctor(self._num_states, expansions)
+        self._partial_ambig_indices = tuple(self._partial_ambig_indices)
 
     def to_indices(self, seq):
         "Converts a sequence of character symbols to the corresponding indices."
@@ -155,6 +187,19 @@ class DiscreteCharType(object):
     def get_cstate_set_lookup(self):
         return  self._cstate_set_lookup
     cstate_set_lookup = property(get_cstate_set_lookup)
+
+    def get_partial_ambiguity_indices(self):
+        return self._partial_ambig_indices
+    partial_ambiguity_indices = property(get_partial_ambiguity_indices)
+
+    def has_partial_ambiguity(self, indices):
+        pai = set(self.partial_ambiguity_indices)
+        for el in indices:
+            if el in pai:
+                return True
+        return False
+        
+    
 
 ################################################################################
 # cPhyProb is a package implementing some probability calculations used in

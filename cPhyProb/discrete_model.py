@@ -6,6 +6,7 @@
 import copy
 from itertools import izip
 from cPhyProb import get_logger
+from cPhyProb import Parameter, MutableFloatParameter, FloatParameter
 _LOG = get_logger(__name__)
 from cPhyProb.discrete_char_type import DNAType, CreateDNAType
 
@@ -29,46 +30,6 @@ def _create_model_impl(num_states):
 if PurePythonImpl:
     def cdsctm_set_q_mat(model, q_mat):
         model.set_q_mat(q_mat)
-
-class Parameter(object):
-    def __init__(self, value):
-        self._value = self.native_type()(value)
-        self.listener_list = []
-    def native_type(self):
-        return lambda x : x
-    def add_listener(self, listener):
-        self.listener_list.append(listener)
-    def get_value(self):
-        return self._value
-    def set_value(self, v):
-        return self._value_setter(v)
-    def _value_setter(self, v):
-        raise AttributeError("can't set attribute")
-    value = property(get_value, set_value)
-
-class FloatParameter(Parameter):
-    def native_type(self):
-        return float
-    def __float__(self):
-        return self.value
-    def __add__(self, other):
-        return float(self) + other
-    def __sub__(self, other):
-        return float(self) - other
-    def __mul__(self, other):
-        return float(self) * other
-    def __div__(self, other):
-        return float(self) / other
-    def __repr__(self):
-        return 'FloatParameter(%s)' % repr(self.value)
-    def _value_setter(self, v):
-        self._value = float(v)
-
-class MutableFloatParameter(FloatParameter):
-    def set_value(self, v):
-        self._value = v
-    value = property(Parameter.get_value, set_value)
-    
     
 class SiteModel(object):
     def __init__(self, sub_models, asrv=None, mixture_proportions=None):
@@ -362,7 +323,7 @@ class RevDiscreteModel(object):
 
 
 if False:
-    def Kimura2Parameter(kappa):
+    def Kimura2ParameterModel(kappa):
         dna = CreateDNAType()
         if kappa is None:
             kappa = MutableFloatParameter(1.0)
@@ -370,7 +331,7 @@ if False:
             kappa = MutableFloatParameter(kappa)
         return RevDiscreteModel(r_upper=[[1.0, 1.0, 1.0], [1.0, 1.0], [1.0]], char_type=dna, params=[kappa])
 
-class Kimura2Parameter(RevDiscreteModel):
+class Kimura2ParameterModel(RevDiscreteModel):
     """A RevDiscreteModel instance with the Kimura (1980) parameters."""
     def __init__(self, kappa=None):
         dna = DNAType()
@@ -379,11 +340,11 @@ class Kimura2Parameter(RevDiscreteModel):
         if not isinstance(kappa, Parameter):
             kappa = FloatParameter(kappa)
         self._kappa = kappa
-        _LOG.debug("Created dna type in Kimura2Parameter")
+        _LOG.debug("Created dna type in Kimura2ParameterModel")
         RevDiscreteModel.__init__(self, r_upper=[[1.0, kappa, 1.0], [1.0, kappa], [1.0]], char_type=dna, params=[kappa])
         _LOG.debug("called RevDiscreteModel.__init__")
         self.set_kappa(kappa)   
-        _LOG.debug("called Kimura2Parameter.set_kappa called")
+        _LOG.debug("called Kimura2ParameterModel.set_kappa called")
     def get_kappa(self):
         return self._kappa
     def set_kappa(self, k):
@@ -394,6 +355,15 @@ class Kimura2Parameter(RevDiscreteModel):
         r_upper = [[1.0, k, 1.0], [1.0, k], [1.0]]
         self.r_upper = r_upper
     kappa = property(get_kappa, set_kappa)
+
+
+class JukesCantorModel(RevDiscreteModel):
+    """A RevDiscreteModel instance with no free parameters"""
+    def __init__(self, kappa=None):
+        dna = DNAType()
+        _LOG.debug("Created dna type in JukesCantorModel")
+        RevDiscreteModel.__init__(self, r_upper=[[1.0, 1.0, 1.0], [1.0, 1.0], [1.0]], char_type=dna, params=[])
+        _LOG.debug("called RevDiscreteModel.__init__")
 
 
 
@@ -474,7 +444,7 @@ class SiteModel(object):
     model_probs = property(get_model_probs, set_model_probs)
     model_list = property(get_model_list)
 
-def JukesCantor():
+def JukesCantorModel():
     """Returns a RevDiscreteModel instance with the Jukes-Cantor (1969)
     parameters.
     """

@@ -6,7 +6,7 @@
 import unittest
 from cPhyProb.tests.util import *
 from cPhyProb.asrv import RateHetManager, RateHetType, GammaRateHetManager
-from cPhyProb.discrete_model import Kimura2Parameter, SiteModel
+from cPhyProb.discrete_model import Kimura2ParameterModel, SiteModel
 from cPhyProb.phy_calc import PhyloSubsetLikelihoodCalculator, PhyloLikelihoodCalculator
 from cPhyProb.discrete_char_type import DNAType
 
@@ -14,7 +14,7 @@ class IntegrationTest(unittest.TestCase):
 
     def test_new_api(self):
         char_mat_inp = ["ACGT", "AGGT"]
-        kimura_model = Kimura2Parameter()
+        kimura_model = Kimura2ParameterModel()
         site_model = SiteModel(kimura_model)
         subsetCalc = PhyloSubsetLikelihoodCalculator(char_matrix=char_mat_inp,
                             discrete_char_type=DNAType(),

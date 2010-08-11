@@ -1,22 +1,21 @@
 #! /usr/bin/env python
 # Copyright (c) 2005-7 by Mark T. Holder,  University of Kansas
 # (see bottom of file)
-'''
 "unit tests datatype internals"
 import unittest
 from cPhyProb.tests.util import *
 # pylint: disable-msg=C0111,W0401,W0611,W0212
 from cPhyProb.discrete_char_type import DNAType
-from cPhyProb.discrete_model import JukesCantor
+from cPhyProb.discrete_model import JukesCantorModel
 from cPhyProb.phy_calc import get_tree_decorators
 class TreeDecoratorTest(unittest.TestCase):
     def test_bad_dna(self):
-        jc = JukesCantor()
+        jc = JukesCantorModel()
         inds = ["AC", "A"]
         self.assertRaises(ValueError, get_tree_decorators, inds, jc, 1)
 
     def test_dna(self):
-        jc = JukesCantor()
+        jc = JukesCantorModel()
         inds = ["AC", "AG"]
         ldo, cla, f = get_tree_decorators(inds, jc, 1)
         self.assertEquals(len(ldo), 2)
@@ -35,7 +34,6 @@ def getTestSuite():
 
 if __name__ == "__main__":
     unittest.main()
-'''
 ################################################################################
 # cPhyProb is a package implementing some probability calculations used in
 #   calculating likelihoods on phylogenies. 

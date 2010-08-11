@@ -7,7 +7,7 @@ from cPhyProb.tests.util import *
 # pylint: disable-msg=C0111,W0401,W0611,W0212
 
 from cPhyProb.discrete_char_type import DNAType
-from cPhyProb.discrete_model import RevDiscreteModel, Kimura2Parameter, _r_mat_to_r_upper, _r_upper_to_r_mat
+from cPhyProb.discrete_model import RevDiscreteModel, Kimura2ParameterModel, _r_mat_to_r_upper, _r_upper_to_r_mat
 class ModelTest(unittest.TestCase):
     def test_rev_init(self):
         b = DNAType()
@@ -18,7 +18,7 @@ class ModelTest(unittest.TestCase):
         c = RevDiscreteModel(r_upper=[[1.0, 1.0, 1.0], [1.0, 1.0], [1.0],], char_type=d)
         print id(c.char_type)
     def test_init(self):
-        m = Kimura2Parameter(2.3)
+        m = Kimura2ParameterModel(2.3)
         print id(m.char_type)
         self.assertEqual(bool(m), True)
     def test_bad(self):

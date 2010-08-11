@@ -54,6 +54,7 @@ class ASRVTest(unittest.TestCase):
         expected = [0.46502269, 0.78185321, 1.08432009, 1.66880400]
         assert_list_eq(self, rhm.rates, expected)
         self.assertEqual(rhm.num_categories, 4)
+        self.assertEqual(rhm.shape, 4.2)
         self.assertTrue(abs(rhm.shape-4.2) < 1.0e-5)
 
         rhm = RateHetManager(shape=0.53, num_categories=10, rate_het_type=rhtype)

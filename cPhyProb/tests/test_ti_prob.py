@@ -7,11 +7,11 @@ import unittest
 from cPhyProb.tests.util import *
 # pylint: disable-msg=C0111,W0401,W0611,W0212
 from cPhyProb.prob_mat import ProbMatrixArray, ProbMatrix
-from cPhyProb.discrete_model import RevDiscreteModel, JukesCantor, Kimura2Parameter
+from cPhyProb.discrete_model import RevDiscreteModel, JukesCantorModel, Kimura2ParameterModel
 class ATest(unittest.TestCase):
 
     def test_jc(self):
-        jc = JukesCantor()
+        jc = JukesCantorModel()
         m = jc.get_probs(0.01)
         ti = tv = 0.003311999
         s = 1.0 - ti - 2.0*tv
@@ -21,7 +21,7 @@ class ATest(unittest.TestCase):
                                 [tv, ti, tv, s],])
         
     def test_kimura(self):
-        k2p = Kimura2Parameter(1.0)
+        k2p = Kimura2ParameterModel(1.0)
         m = k2p.get_probs(0.01)
         ti = tv = 0.003311999
         s = 1.0 - ti - 2.0*tv
@@ -50,7 +50,7 @@ class ATest(unittest.TestCase):
                                 [0.0044157142857142858, 0.0039680952380952384, 0.9903238095238095, 0.0012942857142857144], 
                                 [0.0017719999999999999, 0.0081119999999999994, 0.0010872, 0.98902800000000002]])
     def test_pmat_alloc(self):
-        jc = JukesCantor()
+        jc = JukesCantorModel()
         pma = ProbMatrixArray(model=jc)
 
 def additional_tests():

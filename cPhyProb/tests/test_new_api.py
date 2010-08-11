@@ -9,13 +9,13 @@ x='''
 # pylint: disable-msg=C0111,W0401,W0611,W0212
 from cPhyProb.phy_calc import get_tree_decorators, calc_cla, calc_lnL
 from cPhyProb.discrete_model import RevDiscreteModel, _r_upper_to_r_mat, \
-    _r_mat_to_r_upper, JukesCantor
+    _r_mat_to_r_upper, JukesCantorModel
 from cPhyProb.prob_mat import ProbMatrixArray
 from cPhyProb.discrete_char_type import DNAType
 
 class LikelihoodTest(unittest.TestCase):
     def test_jc_three_tax(self):
-        mod = JukesCantor()
+        mod = JukesCantorModel()
         seq_data = ["ACGT", "ACGC", "ACGT"]
         leaf_data, clas, full_la = get_tree_decorators(seq_data, mod)
         leaf0, leaf1, leaf2 = leaf_data

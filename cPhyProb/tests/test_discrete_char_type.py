@@ -25,6 +25,14 @@ class DiscreteCharTypeTest(unittest.TestCase):
         d = DNAType()
         inds = d.to_indices("ACNGT-WAYKCSXBDVMRH")
         self.assertEquals(inds, [0, 1, 4, 2, 3, 4, 8, 0, 6, 10, 1, 9, 4, 14, 13, 11, 7, 5, 12])
+        self.assertEquals(d.num_states, 4)
+        self.assertEquals(d.states, ('A', 'C', 'G', 'T'))
+        self.assertEquals(d.all_symbols, ('A', 'C', 'G', 'T', 'N', 'R', 'Y', 'M', 'W', 'S', 'K', 'V', 'H', 'D', 'B'))
+        self.assertEquals(d.ignore_case, True)
+        self.assertEquals(d.symbol_to_ind, {'A': 0, 'C': 1, 'B': 14, 'D': 13, 'G': 2, 'H': 12, 'K': 10, 'M': 7, 'N': 4, 'S': 9, 'R': 5, 'T': 3, 'W': 8, 'V': 11, 'Y': 6, 'X': 4, '-': 4, '?': 4})
+        self.assertEquals(d.state_code_lookup, ((0,), (1,), (2,), (3,), (0, 1, 2, 3), (0, 2), (1, 3), (0, 1), (0, 3), (1, 2), (2, 3), (0, 1, 2), (0, 1, 3), (0, 2, 3), (1, 2, 3)))
+        self.assertTrue(d.state_code_lookup is not None)
+        self.assertEquals(d.partial_ambiguity_indices, tuple(range(5,15)))
 
 def additional_tests():
     "returns all tests in this file as suite"
