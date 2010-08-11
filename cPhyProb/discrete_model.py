@@ -6,12 +6,13 @@
 import copy
 from itertools import izip
 from cPhyProb import get_logger
-from cPhyProb import Parameter, MutableFloatParameter, FloatParameter
+from cPhyProb.parameter import Parameter, MutableFloatParameter, FloatParameter
+from cPhyProb.prob_mat import ProbMatrix
 _LOG = get_logger(__name__)
-from cPhyProb.discrete_char_type import DNAType, CreateDNAType
+from cPhyProb.discrete_char_type import DNAType
 
 
-PurePythonImpl = True
+PurePythonImpl = False
 class PurePythonModelImpl(object):
     def __init__(self, num_states):
         self.num_state  = num_states
@@ -32,6 +33,12 @@ if PurePythonImpl:
         model.set_q_mat(q_mat)
     
 class SiteModel(object):
+    """A model of character evolution that can be assigned to a single site.
+    
+    This class allows for mixing of models Discrete models or other SiteModel
+        instances, and it also can take an among-site rate variation manager.
+    
+    """
     def __init__(self, sub_models, asrv=None, mixture_proportions=None):
         if isinstance(sub_models, list):
             self.sub_models = sub_models
@@ -77,8 +84,13 @@ class SiteModel(object):
     num_prob_models = property(get_num_prob_models)
     
 class RevDiscreteModel(object):
-    """Calculates a transition probability matrix for a discrete state 
+    """A discrete-state time-reversible model of character evolution.
+    
+    Calculates a transition probability matrix for a discrete state 
     character when given a branch length.
+    
+    See:
+       - `get_probs`()
     """
     # pylint: disable-msg=R0903
     def __init__(self, r_mat=None, r_upper=None, equil_freq=None, char_type=None, params=None):
@@ -98,6 +110,7 @@ class RevDiscreteModel(object):
             r_mat = _r_upper_to_r_mat(r_upper) 
         elif not r_mat:
             raise ValueError("Either r_mat or r_upper must be given")
+
         self._num_states = len(r_mat)
         if self._num_states < 2:
             raise ValueError("The number of states must be > 1.")
@@ -118,7 +131,7 @@ class RevDiscreteModel(object):
             priv_row = list(row)
             for n, cell in enumerate(row):
                 if not isinstance(cell, Parameter):
-                    priv_row[n] = FloatParameter(cell)
+                    priv_row[n] = MutableFloatParameter(cell)
             priv_mat.append(tuple(priv_row))
             priv_q_mat.append([float(i) for i in priv_row])
         self._r_mat = tuple(priv_mat)
@@ -158,7 +171,7 @@ class RevDiscreteModel(object):
         object wraps.
         """
         return [self._dsctm]
-
+    c_model_list = property(_get_c_model_list)
     def _create_prob_matrix_obj(self):
         """Factory for ProbMatrix or ProbMatrixArray object with `self` as its 
         model."""
@@ -206,8 +219,7 @@ class RevDiscreteModel(object):
             internal_row = self._r_mat[row_n]
             for col_n, cell in enumerate(row):
                 internal_cell = internal_row[col_n]
-                print "repr(internal_cell) =", repr(internal_cell)
-                if float(cell) != internal_cell.value:
+                if float(cell) != float(internal_cell):
                     internal_cell.value = cell
         self._recalc_q_mat()
         
@@ -324,7 +336,7 @@ class RevDiscreteModel(object):
 
 if False:
     def Kimura2ParameterModel(kappa):
-        dna = CreateDNAType()
+        dna = DNAType()
         if kappa is None:
             kappa = MutableFloatParameter(1.0)
         elif not isinstance(kappa, Parameter):
@@ -338,10 +350,12 @@ class Kimura2ParameterModel(RevDiscreteModel):
         if kappa is None:
             kappa = 1.0
         if not isinstance(kappa, Parameter):
-            kappa = FloatParameter(kappa)
+            kappa = MutableFloatParameter(kappa)
         self._kappa = kappa
         _LOG.debug("Created dna type in Kimura2ParameterModel")
-        RevDiscreteModel.__init__(self, r_upper=[[1.0, kappa, 1.0], [1.0, kappa], [1.0]], char_type=dna, params=[kappa])
+        r_upper = [[1.0, kappa, 1.0], [1.0, kappa], [1.0]]
+        print "repr(r_upper) in k2p =", repr(r_upper)
+        RevDiscreteModel.__init__(self, r_upper=r_upper, char_type=dna, params=[kappa])
         _LOG.debug("called RevDiscreteModel.__init__")
         self.set_kappa(kappa)   
         _LOG.debug("called Kimura2ParameterModel.set_kappa called")

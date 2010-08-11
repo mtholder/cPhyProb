@@ -470,11 +470,11 @@ def get_tree_decorators(disc_char_mat, model, n_pmats=1, **kwargs):
             m = "The number of characters differs between row 0 (%d) and row %d (%d." % (i, n_sites, len(enc_data[i]))
             raise ValueError(m)
     state_set_lookup = disc_char_type.get_cstate_set_lookup()
-    n_states = disc_char_type.get_n_states()
+    num_states = disc_char_type.get_n_states()
     n_categ = model.n_prob_matrices
     ldobjs = [cleaf_data_ctor(i, state_set_lookup, n_categ) for i in enc_data]
-    clas =  [cla_ctor(n_sites, n_states, n_categ) for i in range(n_clas)]
-    full_la =  full_la_ctor(n_sites, n_states, n_categ)
+    clas =  [cla_ctor(n_sites, num_states, n_categ) for i in range(n_clas)]
+    full_la =  full_la_ctor(n_sites, num_states, n_categ)
     if n_pmats > 0:
         if n_pmats == 1:
             ldobjs = [EdgeCalcStruct(i, ProbMatrixArray(model=model), model=model) for i in ldobjs]

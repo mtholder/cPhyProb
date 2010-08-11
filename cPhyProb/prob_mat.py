@@ -53,50 +53,50 @@ class ProbMatrixArray(object):
             *`model` can be passed in (which makes the model arg
                 optional in calls to `calc_probs()`, or
         OR
-            * `n_states` the number of states in each probability matrix.
+            * `num_states` the number of states in each probability matrix.
           AND:
-            * `n_mat` is the number of matrices, 
+            * `num_mat` is the number of matrices, 
         """
         self.model = kwargs.get("model")
-        self._n_mat = kwargs.get("n_mat")
-        self._n_states = kwargs.get("n_states")
+        self._num_mat = kwargs.get("num_mat")
+        self._num_states = kwargs.get("num_states")
         if self.model is not None:
-            n_mat = self.model.n_prob_matrices
-            if self._n_mat is None:
-                self._n_mat = n_mat
-            elif self._n_mat != n_mat:
-                raise ValueError("model.n_prob_matrices and n_mat should not differ.")
-            mns = self.model.n_states
-            if self._n_states is None:
-                self._n_states = mns
-            elif mns != self._n_states:
-                raise ValueError("model.n_states and n_states should not differ.")
+            num_mat = self.model.num_prob_matrices
+            if self._num_mat is None:
+                self._num_mat = num_mat
+            elif self._num_mat != num_mat:
+                raise ValueError("model.num_prob_matrices and num_mat should not differ.")
+            mns = self.model.num_states
+            if self._num_states is None:
+                self._num_states = mns
+            elif mns != self._num_states:
+                raise ValueError("model.num_states and num_states should not differ.")
             mod_l = self.model.get_model_list()
         else:
-            if self._n_mat is None:
-                raise ValueError("model or n_mat must be specified.")
-            if self._n_states is None:
-                raise ValueError("A model or n_states must be specified.")
-            mod_l = [None] * self._n_mat
-        n_mat = self._n_mat
-        self._mat_arr = cpmat_array_ctor(n_mat, self._n_states)
-        self.calculated = [False] * n_mat
+            if self._num_mat is None:
+                raise ValueError("model or num_mat must be specified.")
+            if self._num_states is None:
+                raise ValueError("A model or num_states must be specified.")
+            mod_l = [None] * self._num_mat
+        num_mat = self._num_mat
+        self._mat_arr = cpmat_array_ctor(num_mat, self._num_states)
+        self.calculated = [False] * num_mat
         self._last_out = None
         as_list = []
-        for i in xrange(n_mat):
+        for i in xrange(num_mat):
             p = ProbMatrix(pmat_array=self, pos=i, model=mod_l[i])
             as_list.append(p)
         self._prob_matrix_list = tuple(as_list)
-        self.pos_list = range(n_mat)
+        self.pos_list = range(num_mat)
 
-    def get_n_mat(self):
+    def get_num_mat(self):
         "returns the number of probability matrices in the ProbMatrixArray"
-        return self._n_mat
+        return self._num_mat
 
-    def get_n_states(self):
+    def get_num_states(self):
         """returns the number of states in each probability matrix in the 
         ProbMatrixArray"""
-        return self._n_states
+        return self._num_states
 
     def get_prob_matrix_tuple(self):
         """Returns the tuple of ProbMatrix that correspond to each matrix in the
@@ -108,7 +108,7 @@ class ProbMatrixArray(object):
         """Returns the matrices with the indices indicated by the element(s) in
         `key`.
         """
-        mat_inds = normalize_getitem_key(key, self.n_mat)
+        mat_inds = normalize_getitem_key(key, self.num_mat)
             
         return [ProbMatrix(pmat_array=self, pos=i) for i in mat_inds]
 
@@ -124,9 +124,9 @@ class ProbMatrixArray(object):
         """
         if br_len < 0.0:
             raise ValueError("`br_len` cannot be negative")
-        n_mat = self.n_mat
+        num_mat = self.num_mat
         if mat_n is not None:
-            mat_inds = normalize_getitem_key(mat_n, n_mat)
+            mat_inds = normalize_getitem_key(mat_n, num_mat)
             mat_inds.sort()
             if mat_inds == self.pos_list:
                 mat_inds = []
@@ -142,15 +142,16 @@ class ProbMatrixArray(object):
                 if mat.model is None:
                     if not mat_inds or i in mat_inds:
                        raise ValueError("`model` must be specified")
-                model_list.extend(mat.model._get_c_model_list())
+                model_list.extend(mat.model.c_model_list)
                 br_lens.extend(m.get_adjusted_brlens_list(br_len))
         else:
-            model_list = m._get_c_model_list()
+            model_list = m.c_model_list
             br_lens = m.get_adjusted_brlens_list(br_len)
         self._last_out = None
+        print "repr(model_list) =", repr(model_list)
         if len(mat_inds) == 0:
             calc_pmat_array(self._mat_arr, model_list, br_lens)
-            for i in range(n_mat):
+            for i in range(num_mat):
                 self.calculated[i] = True
         else:
             for i in mat_inds:
@@ -172,8 +173,8 @@ class ProbMatrixArray(object):
         
         `key` can be ommitted for all matrices or can be a valid index or slice.
         """
-        s = key is None and slice(self.n_mat) or key
-        inds = normalize_getitem_key(s, self.n_mat)
+        s = key is None and slice(self.num_mat) or key
+        inds = normalize_getitem_key(s, self.num_mat)
         all_mats = self._get_last_output()
         to_ret = []
         for i in inds:
@@ -196,8 +197,8 @@ class ProbMatrixArray(object):
         self.calc_probs(br_len, model, mat_n)
         return self.probs_as_list(mat_n)
     raw_prob_mat = property(get_raw_prob_mat)
-    n_states = property(get_n_states)
-    n_mat = property(get_n_mat)
+    num_states = property(get_num_states)
+    num_mat = property(get_num_mat)
     matrices = property(get_prob_matrix_tuple)
 
 class ProbMatrix(object):
@@ -209,7 +210,7 @@ class ProbMatrix(object):
          * `pmat_array`: a reference to a ProbMatrixArray object, and
          * `pos`: (the position of this ProbMat in the array).
          Or:
-         * `n_states`: the # of character states.  In this case a 
+         * `num_states`: the # of character states.  In this case a 
             ProbMatrixArray object of length 1 will be created.
         `kwargs` can also contain a `model` arg (which makes the model arg
             optional in calls to `calc_probs()`
@@ -220,22 +221,22 @@ class ProbMatrix(object):
             self.pos = kwargs.get("pos")
             if self.pos is None:
                 raise ValueError("`pos` expected")
-            self._n_states = self.pmat_arr.n_states
-            if self.model and self.model.n_states != self._n_states:
-                raise ValueError("pmat_array.n_states and "\
-                                 "model.n_states must agree.")
+            self._num_states = self.pmat_arr.num_states
+            if self.model and self.model.num_states != self._num_states:
+                raise ValueError("pmat_array.num_states and "\
+                                 "model.num_states must agree.")
         else:
-            self._n_states = kwargs.get("n_states")
-            if self._n_states is None:
+            self._num_states = kwargs.get("num_states")
+            if self._num_states is None:
                 if self.model is not None:
-                    self._n_states = self.model.n_states
+                    self._num_states = self.model.num_states
                 else:
-                    raise ValueError("`n_states` or `pmat_array` expected")
+                    raise ValueError("`num_states` or `pmat_array` expected")
             elif self.model is not None:
-                if self.model.n_state != self._n_states:
-                    raise ValueError("n_states and model.n_states must agree.")
-            self.pmat_arr = ProbMatrixArray(n_mat=1,
-                                            n_states=self._n_states,
+                if self.model.num_states != self._num_states:
+                    raise ValueError("num_states and model.num_states must agree.")
+            self.pmat_arr = ProbMatrixArray(num_mat=1,
+                                            num_states=self._num_states,
                                             model=self.model)
             self.pos = 0
         self.pos_list =  [self.pos]

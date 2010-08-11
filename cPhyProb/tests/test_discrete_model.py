@@ -7,7 +7,7 @@ from cPhyProb.tests.util import *
 # pylint: disable-msg=C0111,W0401,W0611,W0212
 
 from cPhyProb.discrete_char_type import DNAType
-from cPhyProb.discrete_model import RevDiscreteModel, Kimura2ParameterModel, _r_mat_to_r_upper, _r_upper_to_r_mat
+from cPhyProb.discrete_model import RevDiscreteModel, Kimura2ParameterModel, JukesCantorModel, _r_mat_to_r_upper, _r_upper_to_r_mat
 class ModelTest(unittest.TestCase):
     def test_rev_init(self):
         b = DNAType()
@@ -70,7 +70,9 @@ class ModelTest(unittest.TestCase):
                [0.2010050, 0.603015075, 0.150753768, -0.954773869]]
         assert_mat_eq(self, a.q_mat, exp)
 
-
+    def test_jc_probs(self):
+        jc = JukesCantorModel()
+        assert_mat_eq(jc.get_probs(0.01), [[1.0, 0, 0, 0], [0, 1.0, 0], [0,0,1.0, ], [ 0, 0, 0, 1.0]])
 
 def additional_tests():
     "returns all tests in this file as suite"
